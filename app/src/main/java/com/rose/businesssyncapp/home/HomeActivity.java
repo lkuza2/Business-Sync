@@ -3,6 +3,7 @@ package com.rose.businesssyncapp.home;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,10 +13,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.rose.businesssyncapp.R;
+import com.rose.businesssyncapp.card.RegisterCardFragment;
+import com.rose.businesssyncapp.contacts.AddContactFragment;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private DatabaseReference database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +32,7 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -41,6 +51,33 @@ public class HomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().findItem(R.id.nav_profile).setChecked(true);
+        onNavigationItemSelected(navigationView.getMenu().getItem(0));
+
+        String email  = auth.getCurrentUser().getEmail();
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.login_email)).setText(email);
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.login_name)).setText(auth.getCurrentUser().getDisplayName());
+        database = FirebaseDatabase.getInstance().getReference();
+
+        database.child("Users").child(auth.getCurrentUser().getUid()).child("email").setValue(email);
+
+    }
+
+    private void setFragment(Fragment fragment){
+        // Check that the activity is using the layout version with
+        // the fragment_container FrameLayout
+        if (findViewById(R.id.fragment_container) != null) {
+
+            // Create a new Fragment to be placed in the activity layout
+
+            // In case this activity was started with special instructions from an
+            // Intent, pass the Intent's extras to the fragment as arguments
+            fragment.setArguments(getIntent().getExtras());
+
+            // Add the fragment to the 'fragment_container' FrameLayout
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, fragment).commit();
+        }
     }
 
     @Override
@@ -81,12 +118,12 @@ public class HomeActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
+        if (id == R.id.nav_profile) {
+            setFragment(new ProfileFragment());
+        } else if (id == R.id.nav_register_card) {
+            setFragment(new RegisterCardFragment());
+        } else if (id == R.id.nav_add_contact) {
+            setFragment(new AddContactFragment());
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
