@@ -29,6 +29,10 @@
                 android:label="@string/title_activity_home"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+                android:name=".contacts.ConfirmContactActivity"
+                android:label="@string/title_confirm_contact">
+        </activity>
     </application>
 
 </manifest>
