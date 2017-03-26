@@ -83,7 +83,7 @@ public class ViewContactsFragment extends Fragment implements LoadContactsTask.O
           getActivity().runOnUiThread(new Runnable() {
               @Override
               public void run() {
-                  adapter = new ContactsAdapter(users);
+                  adapter = new ContactsAdapter(users, getContext());
                   recyclerView.setAdapter(adapter);
                   ViewContactsFragment.this.getView().findViewById(R.id.contact_progress_bar).setVisibility(View.INVISIBLE);
                   ((SwipeRefreshLayout) getView().findViewById(R.id.swiperefresh)).setRefreshing(false);

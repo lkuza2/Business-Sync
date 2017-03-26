@@ -1,8 +1,13 @@
 package com.rose.businesssyncapp.contacts;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,9 +19,10 @@ import java.util.ArrayList;
 /**
  * Created by kuzalj on 3/25/2017.
  */
-public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder>{
+public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> implements View.OnClickListener {
 
     private ArrayList<User> users;
+    Context context;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -31,8 +37,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         }
     }
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ContactsAdapter(ArrayList<User> users) {
+    public ContactsAdapter(ArrayList<User> users, Context context) {
         this.users = users;
+        this.context = context;
     }
 
     // Create new views (invoked by the layout manager)
@@ -55,17 +62,44 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         // - replace the contents of the view with that element
         //holder.view
         CardView cardView = holder.view;
+        TextView wrkEmail = (TextView) cardView.findViewById(R.id.contact_wrk_email);
+        TextView phone = (TextView) cardView.findViewById(R.id.contact_phone);
+
         User user = users.get(position);
         ((TextView) cardView.findViewById(R.id.contact_full_name)).setText(user.firstName + " " + user.lastName);
         ((TextView) cardView.findViewById(R.id.contact_company_name)).setText(user.company);
-        ((TextView) cardView.findViewById(R.id.contact_phone)).setText(user.phone);
-        ((TextView) cardView.findViewById(R.id.contact_wrk_email)).setText(user.wrkemail);
+        phone.setText(user.phone);
+        phone.setPaintFlags(phone.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        wrkEmail.setText(user.wrkemail);
+        wrkEmail.setPaintFlags(wrkEmail.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         ((ImageView) cardView.findViewById(R.id.contact_profile_image)).setImageBitmap(user.bitmap);
+
+        cardView.findViewById(R.id.contact_phone).setOnClickListener(this);
+        cardView.findViewById(R.id.contact_wrk_email).setOnClickListener(this);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return users.size();
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent;
+        switch(v.getId()){
+            case R.id.contact_phone:
+                intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + ((TextView) v).getText()));
+                context.startActivity(intent);
+                break;
+            case R.id.contact_wrk_email:
+                intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto:" + ((TextView) v).getText()));
+                context.startActivity(intent);
+                break;
+            default:
+                break;
+        }
     }
 }
