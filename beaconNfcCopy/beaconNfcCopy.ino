@@ -87,7 +87,7 @@
 #define PN532_IRQ   (2)
 #define PN532_RESET (3)  // Not connected by default on the NFC Shield
 
-#define DELAY_TIME 400000
+#define DELAY_TIME 800000
 
 /*=========================================================================*/
 
@@ -179,22 +179,6 @@ void setup(void)
   /* Print Bluefruit information */
   ble.info();
 
-//  Serial.println(F("Setting beacon configuration details: "));
-//
-//  // AT+BLEBEACON=0x004C,01-12-23-34-45-56-67-78-89-9A-AB-BC-CD-DE-EF-F0,0x0000,0x0000,-54
-//  ble.print("AT+BLEBEACON="        );
-//  ble.print(BEACON_MANUFACTURER_ID ); ble.print(',');
-//  ble.print(BEACON_UUID            ); ble.print(',');
-//  ble.print(BEACON_MAJOR           ); ble.print(',');
-//  ble.print(BEACON_MINOR           ); ble.print(',');
-//  ble.print(BEACON_RSSI_1M         );
-//  ble.println(); // print line causes the command to execute
-//
-//  // check response status
-//  if (! ble.waitForOK() ) {
-//    error(F("Didn't get the OK"));
-//  }
-//
   Serial.println();
 //  Serial.println(F("Open your beacon app to test"));
 }
@@ -214,29 +198,8 @@ void loop(void) {
   // Wait for an ISO14443A type cards (Mifare, etc.).  When one is found
   // 'uid' will be populated with the UID, and uidLength will indicate
   // if the uid is 4 bytes (Mifare Classic) or 7 bytes (Mifare Ultralight)
-  if (first) {
-    Serial.println("Waiting for an ISO14443A Card ...");
-    success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
-    first = 0;
-  } else {
-    success = 0;
-    timer--;
-  }
-
-  if (!timer) {
-    first = 1;
-    timer = DELAY_TIME;
-    if ( FACTORYRESET_ENABLE ) {
-      /* Perform a factory reset to make sure everything is in a known state */
-      Serial.println(F("Performing a factory reset: "));
-      if ( ! ble.factoryReset() ){
-        error(F("Couldn't factory reset"));
-      }
-    }
-
-    /* Disable command echo from Bluefruit */
-    ble.echo(false);
-  }
+  Serial.println("Waiting for an ISO14443A Card ...");
+  success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
 
   if (success) {
     // Display some basic information about the card
@@ -267,7 +230,7 @@ void loop(void) {
         uint8_t data[16];
     
         // If you want to write something to block 4 to test with, uncomment
-    // the following line and this text should be read back in a minute
+        // the following line and this text should be read back in a minute
         //memcpy(data, (const uint8_t[]){ 'a', 'd', 'a', 'f', 'r', 'u', 'i', 't', '.', 'c', 'o', 'm', 0, 0, 0, 0 }, sizeof data);
         // success = nfc.mifareclassic_WriteDataBlock (4, data);
 
@@ -340,5 +303,18 @@ void loop(void) {
     if (! ble.waitForOK() ) {
       error(F("Didn't get the OK"));
     }
+
+    delay(5000);
+
+    if ( FACTORYRESET_ENABLE ) {
+      /* Perform a factory reset to make sure everything is in a known state */
+      Serial.println(F("Performing a factory reset: "));
+      if ( ! ble.factoryReset() ){
+        error(F("Couldn't factory reset"));
+      }
+    }
+  
+    /* Disable command echo from Bluefruit */
+    ble.echo(false);
   }
 }
