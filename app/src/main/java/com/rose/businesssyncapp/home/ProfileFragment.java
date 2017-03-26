@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -95,10 +96,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         StorageReference userRef = storageRef.child(auth.getCurrentUser().getUid() + "/" + "profile.jpg");
         // Load the image using Glide
-        if(userRef.getName().equals("")) {
+        if(!userRef.getName().equals("")) {
             Glide.with(this /* context */)
                     .using(new FirebaseImageLoader())
                     .load(userRef)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into((ImageView) view.findViewById(R.id.profile_image));
         }
         database.child("Users").child(auth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -223,15 +226,22 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         switch(v.getId()){
             case  R.id.save_profile_button:
                 ((Button) getView().findViewById(R.id.save_profile_button)).setEnabled(false);
-                User user = new User(auth.getCurrentUser().getEmail(),
-                        ((TextView) getView().findViewById(R.id.first_name)).getText().toString(),
-                        ((TextView) getView().findViewById(R.id.last_name)).getText().toString(),
-                        ((TextView) getView().findViewById(R.id.email_text)).getText().toString(),
-                        ((TextView) getView().findViewById(R.id.phone_text)).getText().toString(),
-                        ((TextView) getView().findViewById(R.id.company_textt)).getText().toString()
-                );
+                String email = auth.getCurrentUser().getEmail();
+                String firstName = ((TextView) getView().findViewById(R.id.first_name)).getText().toString();
+                String lastName = ((TextView) getView().findViewById(R.id.last_name)).getText().toString();
+                String emailText = ((TextView) getView().findViewById(R.id.email_text)).getText().toString();
+                String phoneText = ((TextView) getView().findViewById(R.id.phone_text)).getText().toString();
+                String companyText = ((TextView) getView().findViewById(R.id.company_textt)).getText().toString();
 
-                database.child("Users").child(auth.getCurrentUser().getUid()).setValue(user);
+
+
+                database.child("Users").child(auth.getCurrentUser().getUid()).child("firstName").setValue(firstName);
+                database.child("Users").child(auth.getCurrentUser().getUid()).child("lastName").setValue(lastName);
+                database.child("Users").child(auth.getCurrentUser().getUid()).child("email").setValue(email);
+                database.child("Users").child(auth.getCurrentUser().getUid()).child("phone").setValue(phoneText);
+                database.child("Users").child(auth.getCurrentUser().getUid()).child("wrkemail").setValue(emailText);
+                database.child("Users").child(auth.getCurrentUser().getUid()).child("company").setValue(companyText);
+
                 break;
             case R.id.profile_image:
                 ProfileFragmentPermissionsDispatcher.onPickPhotoWithCheck(ProfileFragment.this);

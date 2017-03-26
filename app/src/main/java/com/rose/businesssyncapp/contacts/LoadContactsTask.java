@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,7 +29,8 @@ public class LoadContactsTask extends AsyncTask<Void, Void, Void>{
     private FirebaseStorage storage;
     private ArrayList<User> users = new ArrayList<User>();
     private Context context;
-    private long size = 0;
+    private long size = Integer.MAX_VALUE;
+    private int read = 0;
     private boolean readComplete = false;
     OnReadContactsCompleteListener listener;
 
@@ -43,7 +45,7 @@ public class LoadContactsTask extends AsyncTask<Void, Void, Void>{
     @Override
     protected Void doInBackground(Void... voids) {
         getContacts();
-        while(!readComplete){
+        while(read < size){
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
@@ -53,11 +55,10 @@ public class LoadContactsTask extends AsyncTask<Void, Void, Void>{
 
 
         for(User user : users){
-
-
             StorageReference storageRef = storage.getReference();
 
             StorageReference userRef = storageRef.child(user.userID + "/" + "profile.jpg");
+
             // Load the image using Glide
             if(!userRef.getName().equals("")) {
                 try {
@@ -66,6 +67,8 @@ public class LoadContactsTask extends AsyncTask<Void, Void, Void>{
                             .load(userRef)
                             .asBitmap()
                             .centerCrop()
+                            .skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .into(200, 200)
                             .get();
                     user.bitmap = bitmap;
@@ -111,10 +114,7 @@ public class LoadContactsTask extends AsyncTask<Void, Void, Void>{
                 USER.userID = uid;
                 users.add(USER);
 
-                if(index == size - 1){
-                    //done reading
-                    readComplete = true;
-                }
+                read++;
             }
 
             @Override

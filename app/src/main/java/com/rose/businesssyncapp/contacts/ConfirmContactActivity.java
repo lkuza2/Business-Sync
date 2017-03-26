@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
@@ -53,6 +54,19 @@ public class ConfirmContactActivity extends AppCompatActivity implements View.On
             public void onDataChange(DataSnapshot dataSnapshot) {
                 userID = dataSnapshot.getValue().toString();
                 showUser();
+
+                StorageReference storageRef = storage.getReference();
+
+                StorageReference userRef = storageRef.child(userID + "/" + "profile.jpg");
+                // Load the image using Glide
+                if(!userRef.getName().equals("")) {
+                    Glide.with(ConfirmContactActivity.this /* context */)
+                            .using(new FirebaseImageLoader())
+                            .load(userRef)
+                            .skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .into((ImageView) findViewById(R.id.profile_image_add));
+                }
             }
 
             @Override
@@ -60,17 +74,6 @@ public class ConfirmContactActivity extends AppCompatActivity implements View.On
 
             }
         });
-
-        StorageReference storageRef = storage.getReference();
-
-        StorageReference userRef = storageRef.child(userID + "/" + "profile.jpg");
-        // Load the image using Glide
-        if(userRef.getName().equals("")) {
-            Glide.with(this /* context */)
-                    .using(new FirebaseImageLoader())
-                    .load(userRef)
-                    .into((ImageView) findViewById(R.id.profile_image_add));
-        }
 
         findViewById(R.id.add_button).setOnClickListener(this);
         findViewById(R.id.cancel_button).setOnClickListener(this);

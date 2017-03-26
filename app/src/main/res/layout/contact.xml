@@ -8,7 +8,7 @@
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        card_view:cardCornerRadius="4dp">
+        card_view:cardCornerRadius="4dp" android:paddingBottom="5dp">
         <RelativeLayout
                 android:orientation="vertical"
                         android:layout_width="match_parent"
@@ -21,7 +21,8 @@
                 android:layout_alignWithParentIfMissing="false"
                 android:layout_alignParentLeft="false"
                 android:layout_alignParentStart="false"
-                android:layout_alignParentTop="false" android:layout_margin="5dp" android:layout_width="150dp"/>
+                android:layout_alignParentTop="false" android:layout_margin="5dp" android:layout_width="150dp"
+                android:elevation="1dp"/>
             <TextView
                     android:text="TextView"
                     android:layout_width="wrap_content"

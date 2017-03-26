@@ -3,6 +3,7 @@ package com.rose.businesssyncapp.contacts;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -42,10 +43,23 @@ public class ViewContactsFragment extends Fragment implements LoadContactsTask.O
         new LoadContactsTask(getContext(), this).execute();
 
         // specify an adapter (see also next example)
+        ((SwipeRefreshLayout) view.findViewById(R.id.swiperefresh)).setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        Log.i("BusinessSync", "onRefresh called from SwipeRefreshLayout");
+
+                        // This method performs the actual data-refresh operation.
+                        // The method calls setRefreshing(false) when it's finished.
+                        new LoadContactsTask(ViewContactsFragment.this.getContext(), ViewContactsFragment.this).execute();
+                    }
+                }
+        );
 
 
         return view;
     }
+
 
 
 
@@ -72,6 +86,7 @@ public class ViewContactsFragment extends Fragment implements LoadContactsTask.O
                   adapter = new ContactsAdapter(users);
                   recyclerView.setAdapter(adapter);
                   ViewContactsFragment.this.getView().findViewById(R.id.contact_progress_bar).setVisibility(View.INVISIBLE);
+                  ((SwipeRefreshLayout) getView().findViewById(R.id.swiperefresh)).setRefreshing(false);
               }
           });
     }
