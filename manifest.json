@@ -1,0 +1,7 @@
+{
+  "name": "Business Sync",
+  "short_name": "Business Sync",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "orientation": "portrait"
+}
