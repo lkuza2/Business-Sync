@@ -1,5 +1,6 @@
 package com.rose.businesssyncapp.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,6 +21,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.rose.businesssyncapp.R;
 import com.rose.businesssyncapp.card.RegisterCardFragment;
 import com.rose.businesssyncapp.contacts.AddContactFragment;
+import com.rose.businesssyncapp.contacts.ConfirmContactActivity;
+import com.rose.businesssyncapp.contacts.ViewContactsFragment;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -38,8 +41,8 @@ public class HomeActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(HomeActivity.this, AddContactFragment.class);
+                startActivity(intent);
             }
         });
 
@@ -117,13 +120,17 @@ public class HomeActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         if (id == R.id.nav_profile) {
             setFragment(new ProfileFragment());
+            fab.hide();
         } else if (id == R.id.nav_register_card) {
             setFragment(new RegisterCardFragment());
+            fab.hide();
         } else if (id == R.id.nav_add_contact) {
-            setFragment(new AddContactFragment());
+            setFragment(new ViewContactsFragment());
+            fab.show();
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {

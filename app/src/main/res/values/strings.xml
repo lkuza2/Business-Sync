@@ -11,7 +11,7 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
-    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_home">BusinessSync</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -26,7 +26,7 @@
     <string name="register_card_prompt">Tap a New Card to Register or Remove</string>
     <string name="cards_registered">Cards Registered:</string>
     <string name="card_id">Card ID:</string>
-    <string name="add_contact_str">Add Contact</string>
+    <string name="add_contact_str">Contacts</string>
     <string name="add_contact_tap">Tap a Card to Add a New Contact</string>
     <string name="confirm_contact_str">Add Contact</string>
     <string name="first_name">First Name:</string>

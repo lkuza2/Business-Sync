@@ -6,6 +6,7 @@ import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +26,7 @@ import static android.nfc.NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK;
 /**
  * Created by kuzalj on 3/25/2017.
  */
-public class AddContactFragment extends Fragment implements NfcAdapter.ReaderCallback{
+public class AddContactFragment extends AppCompatActivity implements NfcAdapter.ReaderCallback{
 
     private NfcAdapter nfcAdapter;
     private DatabaseReference database;
@@ -34,19 +35,13 @@ public class AddContactFragment extends Fragment implements NfcAdapter.ReaderCal
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view  = inflater.inflate(R.layout.fragment_add_contact, container, false);
+    protected void onCreate(Bundle savedInstanceState)  {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_add_contact);
         database = FirebaseDatabase.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
-        nfcAdapter = NfcAdapter.getDefaultAdapter(getContext());
-        nfcAdapter.enableReaderMode(getActivity(), this, FLAG_READER_NFC_A | FLAG_READER_SKIP_NDEF_CHECK, null);
-
-        return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        nfcAdapter.enableReaderMode(this, this, FLAG_READER_NFC_A | FLAG_READER_SKIP_NDEF_CHECK, null);
     }
 
     @Override
@@ -68,7 +63,7 @@ public class AddContactFragment extends Fragment implements NfcAdapter.ReaderCal
             string.append(String.format("%02x", octet));
         }
         cardID = string.toString();
-        Intent intent = new Intent(getContext(), ConfirmContactActivity.class);
+        Intent intent = new Intent(this, ConfirmContactActivity.class);
         intent.putExtra("com.rose.businesssyncapp.cardID", cardID);
         startActivityForResult(intent,RESULT_CONFIRM);
 

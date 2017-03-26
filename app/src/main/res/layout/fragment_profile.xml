@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/business_card_text"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="42dp"
-            android:textAppearance="@android:style/TextAppearance.Material.Large"
-            android:text="@string/my_card"/>
 
 
     <ScrollView
@@ -26,6 +16,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+            <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp" app:srcCompat="@drawable/ic_account"
+                    android:id="@+id/profile_image" android:layout_weight="1"
+                    android:foregroundGravity="center"/>
             <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -58,6 +53,33 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Work Phone" android:inputType="phone" android:id="@+id/phone_text"/>
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="E-Mail" android:id="@+id/email_text" android:inputType="textEmailAddress"/>
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Company" android:id="@+id/company_textt"/>
+            </android.support.design.widget.TextInputLayout>
             <Button
                     android:id="@+id/save_profile_button"
                     style="?android:textAppearanceSmall"
@@ -69,5 +91,12 @@
 
         </LinearLayout>
     </ScrollView>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/business_card_text"
+            android:layout_marginTop="16dp"
+            android:textAppearance="@android:style/TextAppearance.Material.Large"
+            android:text="@string/my_card" android:layout_alignParentTop="true" android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>
