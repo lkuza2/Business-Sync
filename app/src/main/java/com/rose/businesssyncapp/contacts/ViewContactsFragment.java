@@ -1,9 +1,11 @@
 package com.rose.businesssyncapp.contacts;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -35,6 +37,8 @@ public class ViewContactsFragment extends Fragment implements LoadContactsTask.O
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true);
+
+        recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(50));
 
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(getContext());
@@ -89,5 +93,20 @@ public class ViewContactsFragment extends Fragment implements LoadContactsTask.O
                   ((SwipeRefreshLayout) getView().findViewById(R.id.swiperefresh)).setRefreshing(false);
               }
           });
+    }
+
+    public class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
+
+        private final int verticalSpaceHeight;
+
+        public VerticalSpaceItemDecoration(int verticalSpaceHeight) {
+            this.verticalSpaceHeight = verticalSpaceHeight;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+                                   RecyclerView.State state) {
+            outRect.bottom = verticalSpaceHeight;
+        }
     }
 }
